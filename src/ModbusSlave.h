@@ -131,7 +131,6 @@ public:
   uint8_t getUnitAddress();
   void setUnitAddress(uint8_t unitAddress);
   ModbusCallback cbVector[CB_MAX];
-
 private:
   uint8_t _unitAddress = MODBUS_DEFAULT_UNIT_ADDRESS;
 };
@@ -152,6 +151,8 @@ public:
   void enable();
   void disable();
   uint8_t poll();
+  void setDbg(Stream *dbg) { this->_dbg=dbg; }
+  void setHalfDuplex(bool hdx) { this->_halfDuplex=hdx; }
 
   bool readCoilFromBuffer(int offset);
   uint16_t readRegisterFromBuffer(int offset);
@@ -185,8 +186,10 @@ private:
   uint8_t _numberOfSlaves = 1;
 
   bool _enabled = true;
+  bool _halfDuplex = false;
 
   Stream &_serialStream;
+  Stream *_dbg=NULL;
 
 #if defined(SERIAL_TX_BUFFER_SIZE) && !defined (ESP32) && !defined (ESP8266)
   int _serialTransmissionBufferLength = SERIAL_TX_BUFFER_SIZE;
